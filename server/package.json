@@ -1,0 +1,23 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "test:ci": "jest --ci --collectCoverage",
+    "dev": "nodemon src/server",
+    "start": "node src/server"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.1"
+  },
+  "devDependencies": {
+    "jest": "^29.0.2",
+    "nodemon": "^2.0.19",
+    "supertest": "^6.2.4"
+  }
+}
