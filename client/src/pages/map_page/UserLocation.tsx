@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react'
 import { Icon, type LatLngExpression } from 'leaflet'
-import { useMapEvents, Marker, Popup } from 'react-leaflet'
+import { useMapEvents, Marker } from 'react-leaflet'
+
+// images
+import userIconImg from '@/assets/images/user-marker.svg'
 
 const userIcon = new Icon({
-  iconUrl: '/src/assets/images/user-marker.svg',
+  iconUrl: userIconImg,
   iconSize: [25, 75],
   iconAnchor: [0, 60],
 })
