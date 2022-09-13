@@ -3,6 +3,7 @@ import { MapContainer, TileLayer } from 'react-leaflet'
 // styles
 import './index.scss'
 import UserLocation from './UserLocation'
+import MpLocations from './MpLocations'
 
 export default function Map() {
   return (
@@ -12,6 +13,7 @@ export default function Map() {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       <UserLocation />
+      <MpLocations />
     </MapContainer>
   )
 }

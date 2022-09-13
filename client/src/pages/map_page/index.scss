@@ -1,4 +1,15 @@
 .leaflet-container {
   width: 100%;
   height: 100vh;
+  font-family: inherit;
+  user-select: none;
+}
+
+.leaflet-popup-content-wrapper {
+  // background: none;
+  // box-shadow: none;
+
+  .leaflet-popup-content {
+    margin: .5em 0;
+  }
 }

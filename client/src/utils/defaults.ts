@@ -1,0 +1,1 @@
+export const maxMpLifeSeconds = 5 * 60

@@ -7,17 +7,17 @@ import userIconImg from '@/assets/images/user-marker.svg'
 
 const userIcon = new Icon({
   iconUrl: userIconImg,
-  iconSize: [25, 75],
-  iconAnchor: [0, 60],
+  iconSize: [25, 50],
+  iconAnchor: [12.5, 50],
 })
 
 export default function UserLocation() {
-  const [position, setPosition] = useState<LatLngExpression | null>(null)
+  const [position, setPosition] = useState<LatLngExpression>()
 
   const map = useMapEvents({
     locationfound: (e) => {
       setPosition(e.latlng)
-      map.flyTo(e.latlng, 13)
+      map.flyTo(e.latlng, 15)
     },
   })
 
@@ -25,5 +25,17 @@ export default function UserLocation() {
     map.locate()
   }, [map])
 
-  return position ? <Marker position={position} icon={userIcon} /> : null
+  const handleClick = () => {
+    position && map.flyTo(position, 15)
+  }
+
+  return position ? (
+    <Marker
+      position={position}
+      icon={userIcon}
+      eventHandlers={{
+        click: handleClick,
+      }}
+    />
+  ) : null
 }

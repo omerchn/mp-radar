@@ -1,0 +1,58 @@
+.mp-popup {
+  position: relative;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: fit-content;
+
+  .votes {
+    display: flex;
+  }
+
+  .vote {
+    box-shadow: 0 0 .5em #999;
+    height: 2em;
+    width: 2em;
+    margin: .2em;
+
+    img {
+      height: 1em;
+      width: 1em;
+    }
+  }
+
+  .score {
+    position: absolute;
+    top: -2.25em;
+    height: 2.5em;
+    width: 2.5em;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #fff;
+    box-shadow: 0 0 .5em #999;
+
+    &.even {
+      color: #bbb;
+    }
+
+    &.pos {
+      color: green;
+    
+      &::after {
+        content: "+";
+      }
+    }
+
+    &.neg {
+      color: red;
+    
+      &::after {
+        content: "-";
+      }
+    }
+  }
+}
