@@ -6,16 +6,17 @@
   justify-content: center;
   align-items: center;
   width: fit-content;
+  padding: 0 0.5em;
 
   .votes {
     display: flex;
   }
 
   .vote {
-    box-shadow: 0 0 .5em #999;
+    box-shadow: 0 0 0.5em #999;
     height: 2em;
     width: 2em;
-    margin: .2em;
+    margin: 0.2em;
 
     img {
       height: 1em;
@@ -25,7 +26,7 @@
 
   .score {
     position: absolute;
-    top: -2.25em;
+    top: -2.3em;
     height: 2.5em;
     width: 2.5em;
     border-radius: 50%;
@@ -33,7 +34,7 @@
     justify-content: center;
     align-items: center;
     background: #fff;
-    box-shadow: 0 0 .5em #999;
+    box-shadow: 0 0 0.5em #999;
 
     &.even {
       color: #bbb;
@@ -41,18 +42,40 @@
 
     &.pos {
       color: green;
-    
+
       &::after {
-        content: "+";
+        content: '+';
       }
     }
 
     &.neg {
       color: red;
-    
+
       &::after {
-        content: "-";
+        content: '-';
       }
+    }
+  }
+
+  .last-seen {
+    padding: 0.5em;
+    display: flex;
+    flex-direction: column;
+
+    .timer {
+      font-size: 1.2em;
+    }
+  }
+
+  .MuiLinearProgress-root {
+    margin: 0.2em;
+    border-radius: 0.5em;
+    width: 100%;
+    height: 0.5em;
+    transform: scaleX(-1);
+
+    .MuiLinearProgress-bar {
+      border-radius: 0.5em;
     }
   }
 }

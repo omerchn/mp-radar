@@ -2,8 +2,28 @@ import { MapContainer, TileLayer } from 'react-leaflet'
 
 // styles
 import './index.scss'
-import UserLocation from './UserLocation'
-import MpLocations from './MpLocations'
+
+// interfaces
+import MpData from '@/interfaces/MpData'
+
+// components
+import UserMarker from '@/components/UserMarker'
+import MpMarker from '@/components/MpMarker'
+
+const mps: Array<MpData> = [
+  {
+    id: 'id1',
+    position: [31.809, 34.767],
+    dateLastSeen: new Date(),
+    score: 0,
+  },
+  {
+    id: 'id2',
+    position: [32.0733, 34.786],
+    dateLastSeen: new Date(),
+    score: 0,
+  },
+]
 
 export default function Map() {
   return (
@@ -12,8 +32,10 @@ export default function Map() {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <UserLocation />
-      <MpLocations />
+      <UserMarker />
+      {mps.map((mp) => (
+        <MpMarker key={mp.id} mpData={mp} />
+      ))}
     </MapContainer>
   )
 }

@@ -1,8 +1,6 @@
 import { type LatLngExpression } from 'leaflet'
 
-export default interface MpData {
+export default interface UserData {
   id: string
   position: LatLngExpression
-  dateLastSeen: Date
-  score: number
 }
