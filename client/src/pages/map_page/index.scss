@@ -10,6 +10,14 @@
   // box-shadow: none;
 
   .leaflet-popup-content {
-    margin: .5em 0;
+    margin: 0.5em 0;
+  }
+}
+
+.leaflet-control-attribution {
+  font-size: 0.8em;
+
+  svg {
+    display: none !important;
   }
 }

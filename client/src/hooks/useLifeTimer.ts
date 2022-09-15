@@ -51,6 +51,7 @@ export default function useLifeTimer({
   return {
     timerString,
     lifePercentage,
+    isDead: lifePercentage === 0,
   }
 }
 

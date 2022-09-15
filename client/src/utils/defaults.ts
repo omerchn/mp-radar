@@ -1,1 +1,1 @@
-export const maxMpLifeSeconds = 5 * 60
+export const MP_LIFE_SPAN_SECONDS = 5 * 60
