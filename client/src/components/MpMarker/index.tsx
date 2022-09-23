@@ -1,8 +1,19 @@
+import { useEffect, useRef } from 'react'
 import { Marker, Popup } from 'react-leaflet'
-import { Icon } from 'leaflet'
+import { Icon, Marker as MarkerType } from 'leaflet'
 
 // interfaces
 import MpData from '@/interfaces/MpData'
+
+// mutations
+import {
+  useRemoveMp,
+  useSeenMp,
+  useUnseenMp,
+} from '@/lib/react-query/mutations'
+
+// context
+import { useUserLocation } from '@/context/UserLocation'
 
 // custom hooks
 import useLifeTimer from '@/hooks/useLifeTimer'
@@ -39,21 +50,55 @@ interface Props {
 }
 
 export default function MpMarker({ mpData }: Props) {
-  const { timerString, lifePercentage, isDead } = useLifeTimer({
+  const markerRef = useRef<MarkerType>(null)
+
+  const { closestMpId } = useUserLocation()
+  const isClosest = closestMpId === mpData.id
+
+  const { mutate: removeMp } = useRemoveMp(mpData.id)
+  const { mutate: seenMp } = useSeenMp(mpData.id)
+  const { mutate: unseenMp } = useUnseenMp(mpData.id)
+
+  const { timerString, isDead } = useLifeTimer({
     lifeStartDate: mpData.dateLastSeen,
     lifeSpanSeconds: MP_LIFE_SPAN_SECONDS,
+    onDead: removeMp,
   })
+
+  useEffect(() => {
+    if (isClosest) {
+      markerRef.current?.openPopup()
+    }
+  }, [markerRef.current, closestMpId])
+
+  const handleSeen = () => {
+    seenMp()
+  }
+
+  const handleUnSeen = () => {
+    unseenMp()
+  }
 
   return !isDead ? (
     <>
-      <Marker position={mpData.position} icon={mpIcon}>
+      <Marker position={mpData.position} icon={mpIcon} ref={markerRef}>
         <Popup closeButton={false} offset={[0, -45]} autoPan={false}>
           <div className="mp-popup">
             <div className="votes">
-              <IconButton size="small" className="vote" color="error">
+              <IconButton
+                size="small"
+                className="vote"
+                color="error"
+                onClick={handleUnSeen}
+              >
                 <img src={unseenImg} alt="unseen" />
               </IconButton>
-              <IconButton size="small" className="vote" color="success">
+              <IconButton
+                size="small"
+                className="vote"
+                color="success"
+                onClick={handleSeen}
+              >
                 <img src={seenImg} alt="seen" />
               </IconButton>
             </div>
@@ -73,12 +118,14 @@ export default function MpMarker({ mpData }: Props) {
           </div>
         </Popup>
       </Marker>
-      <Marker
-        position={mpData.position}
-        icon={alertIcon}
-        interactive={false}
-        draggable
-      />
+      {isClosest ? (
+        <Marker
+          position={mpData.position}
+          icon={alertIcon}
+          interactive={false}
+          draggable
+        />
+      ) : null}
     </>
   ) : null
 }

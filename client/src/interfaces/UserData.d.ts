@@ -1,6 +1,6 @@
-import { type LatLngExpression } from 'leaflet'
+import { type LatLng } from 'leaflet'
 
 export default interface UserData {
   id: string
-  position: LatLngExpression
+  position: LatLng
 }

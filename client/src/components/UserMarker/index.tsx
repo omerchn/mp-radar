@@ -4,7 +4,7 @@ import { Marker, useMap } from 'react-leaflet'
 
 // images
 import userIconImg from '@/assets/images/user-marker.svg'
-import useUserLocation from '@/hooks/useUserLocation'
+import { useUserLocation } from '@/context/UserLocation'
 
 const userIcon = new Icon({
   iconUrl: userIconImg,
@@ -13,7 +13,7 @@ const userIcon = new Icon({
 })
 
 export default function UserMarker() {
-  const userLocation = useUserLocation()
+  const { userLocation } = useUserLocation()
   const map = useMap()
   const hasFlownToUser = useRef(false)
 
