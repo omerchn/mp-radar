@@ -17,7 +17,7 @@ export default function Map() {
   const { data: mps } = useMps()
   return (
     <>
-      <MapContainer center={[31.7, 35.06]} zoom={8} zoomControl={false}>
+      <MapContainer center={[31.7, 35.06]} zoom={8}>
         <UserLocationProvider>
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
