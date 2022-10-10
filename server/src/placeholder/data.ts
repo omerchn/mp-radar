@@ -1,7 +1,6 @@
-// interfaces
-import MpData from '@/interfaces/MpData'
+import { MpData } from './interfaces'
 
-const mps: Array<MpData> = [
+export let mps: MpData[] = [
   {
     id: 'id1',
     position: [31.809, 34.767],
@@ -15,9 +14,3 @@ const mps: Array<MpData> = [
     score: 2,
   },
 ]
-
-export function useMps() {
-  return {
-    data: mps,
-  }
-}

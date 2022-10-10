@@ -3,7 +3,7 @@ import { type LatLng } from 'leaflet'
 import { useMapEvents } from 'react-leaflet'
 
 // queries
-import { useMps } from '@/lib/react-query/queries'
+import { useMps } from '@/lib/trpc'
 
 // custom hooks
 import useInterval from '@/hooks/useInterval'
@@ -45,10 +45,10 @@ export function UserLocationProvider({ children }: Props) {
   }, 1000)
 
   useEffect(() => {
-    if (userLocation) {
+    if (userLocation && mps) {
       setClosestMpId(getClosestMp(userLocation, mps)?.id)
     }
-  }, [userLocation])
+  }, [userLocation, mps])
 
   return (
     <UserLocationContext.Provider

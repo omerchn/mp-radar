@@ -1,16 +1,16 @@
 import { useEffect, useRef } from 'react'
-import { Marker, Popup } from 'react-leaflet'
-import { Icon, Marker as MarkerType } from 'leaflet'
+import { CircleMarker, Marker, Popup } from 'react-leaflet'
+import {
+  Icon,
+  Marker as MarkerType,
+  CircleMarker as CircleMarkerType,
+} from 'leaflet'
 
-// interfaces
-import MpData from '@/interfaces/MpData'
+// types
+import { type MpData } from '@/lib/trpc'
 
 // mutations
-import {
-  useRemoveMp,
-  useSeenMp,
-  useUnseenMp,
-} from '@/lib/react-query/mutations'
+import { useMpScore } from '@/lib/trpc'
 
 // context
 import { useUserLocation } from '@/context/UserLocation'
@@ -50,19 +50,16 @@ interface Props {
 }
 
 export default function MpMarker({ mpData }: Props) {
-  const markerRef = useRef<MarkerType>(null)
+  const markerRef = useRef<CircleMarkerType>(null)
 
   const { closestMpId } = useUserLocation()
   const isClosest = closestMpId === mpData.id
 
-  const { mutate: removeMp } = useRemoveMp(mpData.id)
-  const { mutate: seenMp } = useSeenMp(mpData.id)
-  const { mutate: unseenMp } = useUnseenMp(mpData.id)
+  const { mutate: scoreMp } = useMpScore()
 
   const { timerString, isDead } = useLifeTimer({
     lifeStartDate: mpData.dateLastSeen,
     lifeSpanSeconds: MP_LIFE_SPAN_SECONDS,
-    onDead: removeMp,
   })
 
   useEffect(() => {
@@ -72,17 +69,24 @@ export default function MpMarker({ mpData }: Props) {
   }, [markerRef.current, closestMpId])
 
   const handleSeen = () => {
-    seenMp()
+    scoreMp({
+      mpId: mpData.id,
+      score: 1,
+    })
   }
 
   const handleUnSeen = () => {
-    unseenMp()
+    scoreMp({
+      mpId: mpData.id,
+      score: -1,
+    })
   }
 
   return !isDead ? (
     <>
-      <Marker position={mpData.position} icon={mpIcon} ref={markerRef}>
-        <Popup closeButton={false} offset={[0, -45]} autoPan={false}>
+      {/* <Marker position={mpData.position} icon={mpIcon} ref={markerRef}> */}
+      <CircleMarker center={mpData.position} color="red" ref={markerRef}>
+        <Popup closeButton={false} autoPan={false}>
           <div className="mp-popup">
             <div className="votes">
               <IconButton
@@ -117,15 +121,15 @@ export default function MpMarker({ mpData }: Props) {
             </div>
           </div>
         </Popup>
-      </Marker>
-      {isClosest ? (
+      </CircleMarker>
+      {/* {isClosest ? (
         <Marker
           position={mpData.position}
           icon={alertIcon}
           interactive={false}
           draggable
         />
-      ) : null}
+      ) : null} */}
     </>
   ) : null
 }
