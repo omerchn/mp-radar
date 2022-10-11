@@ -9,6 +9,7 @@ import { UserLocationProvider } from '@/context/UserLocation'
 // components
 import UserMarker from '@/components/UserMarker'
 import MpMarker from '@/components/MpMarker'
+import MarkerClusterGroup from '@/components/MarkerClusterGroup'
 import ClickEvent from './ClickEvent' // remove later
 
 // styles
@@ -25,9 +26,11 @@ export default function Map() {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
           <UserMarker />
-          {mps?.map((mp) => (
-            <MpMarker key={mp.id} mpData={mp} />
-          ))}
+          <MarkerClusterGroup>
+            {mps?.map((mp) => (
+              <MpMarker key={mp.id} mpData={mp} />
+            ))}
+          </MarkerClusterGroup>
           <ClickEvent />
         </UserLocationProvider>
       </MapContainer>

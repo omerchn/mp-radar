@@ -18,9 +18,6 @@ import { useUserLocation } from '@/context/UserLocation'
 // custom hooks
 import useLifeTimer from '@/hooks/useLifeTimer'
 
-// defaults
-import { MP_LIFE_SPAN_SECONDS } from '@/utils/defaults'
-
 // components
 import IconButton from '@mui/material/IconButton'
 
@@ -50,16 +47,17 @@ interface Props {
 }
 
 export default function MpMarker({ mpData }: Props) {
-  const markerRef = useRef<CircleMarkerType>(null)
+  // const markerRef = useRef<CircleMarkerType>(null)
+  const markerRef = useRef<MarkerType>(null)
 
   const { closestMpId } = useUserLocation()
   const isClosest = closestMpId === mpData.id
 
   const { mutate: scoreMp } = useMpScore()
 
-  const { timerString, isDead } = useLifeTimer({
+  const { timerString } = useLifeTimer({
     lifeStartDate: mpData.dateLastSeen,
-    lifeSpanSeconds: MP_LIFE_SPAN_SECONDS,
+    lifeSpanSeconds: Infinity,
   })
 
   useEffect(() => {
@@ -82,11 +80,11 @@ export default function MpMarker({ mpData }: Props) {
     })
   }
 
-  return !isDead ? (
+  return (
     <>
-      {/* <Marker position={mpData.position} icon={mpIcon} ref={markerRef}> */}
-      <CircleMarker center={mpData.position} color="red" ref={markerRef}>
-        <Popup closeButton={false} autoPan={false}>
+      <Marker position={mpData.position} icon={mpIcon} ref={markerRef}>
+        {/* <CircleMarker center={mpData.position} color="red" ref={markerRef}> */}
+        <Popup closeButton={false} offset={[0, -45]} autoPan={false}>
           <div className="mp-popup">
             <div className="votes">
               <IconButton
@@ -121,7 +119,8 @@ export default function MpMarker({ mpData }: Props) {
             </div>
           </div>
         </Popup>
-      </CircleMarker>
+      </Marker>
+      {/* </CircleMarker> */}
       {/* {isClosest ? (
         <Marker
           position={mpData.position}
@@ -131,5 +130,5 @@ export default function MpMarker({ mpData }: Props) {
         />
       ) : null} */}
     </>
-  ) : null
+  )
 }

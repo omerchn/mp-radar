@@ -43,7 +43,7 @@ export const mpsRouter = createRouter({
         id: Date.now().toString(),
         position: input.position,
         dateLastSeen: input.dateSeen,
-        score: 1,
+        score: 0,
       }
       mps.push(mp)
       ee.emit('change', mps)
