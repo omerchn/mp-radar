@@ -33,7 +33,8 @@ export default function UserMarker() {
   return userLocation ? (
     <Marker
       position={userLocation}
-      icon={userIcon}
+      title="אני"
+      // icon={userIcon}
       eventHandlers={{
         click: handleClick,
       }}

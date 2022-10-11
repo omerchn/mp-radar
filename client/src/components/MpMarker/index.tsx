@@ -18,7 +18,7 @@ import useLifeTimer from '@/hooks/useLifeTimer'
 import IconButton from '@mui/material/IconButton'
 
 // images
-import mpIconImg from '@/assets/images/mp-marker.svg'
+import mpIconImg from '@/assets/images/mp-marker-2.svg'
 import seenImg from '@/assets/images/seen.svg'
 import unseenImg from '@/assets/images/unseen.svg'
 
@@ -97,12 +97,13 @@ export default function MpMarker({ mpData }: Props) {
         position={mpData.position}
         icon={mpIcon}
         ref={markerRef}
-        draggable
+        title="מלשין"
       >
         <Popup closeButton={false} offset={[0, -45]} autoPan={false}>
           <div className="mp-popup">
             <div className="votes">
               <IconButton
+                title="לא ראיתי"
                 size="small"
                 className={`vote ${
                   chosenOption
@@ -117,6 +118,7 @@ export default function MpMarker({ mpData }: Props) {
                 <img src={unseenImg} alt="unseen" />
               </IconButton>
               <IconButton
+                title="ראיתי"
                 size="small"
                 className={`vote ${
                   chosenOption

@@ -1,4 +1,4 @@
-import { MapContainer, TileLayer, useMapEvents } from 'react-leaflet'
+import { MapContainer, TileLayer } from 'react-leaflet'
 
 // queries
 import { useMps } from '@/lib/trpc'
@@ -10,10 +10,10 @@ import { UserLocationProvider } from '@/context/UserLocation'
 import UserMarker from '@/components/UserMarker'
 import MpMarker from '@/components/MpMarker'
 import MarkerClusterGroup from '@/components/MarkerClusterGroup'
-import ClickEvent from './ClickEvent' // remove later
 
 // styles
 import './index.scss'
+import Overlay from './Overlay'
 
 export default function Map() {
   const { data: mps } = useMps()
@@ -31,9 +31,9 @@ export default function Map() {
               <MpMarker key={mp.id} mpData={mp} />
             ))}
           </MarkerClusterGroup>
-          <ClickEvent />
         </UserLocationProvider>
       </MapContainer>
+      <Overlay />
     </>
   )
 }
