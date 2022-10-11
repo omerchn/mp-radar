@@ -1,10 +1,6 @@
 import { useEffect, useRef } from 'react'
-import { CircleMarker, Marker, Popup } from 'react-leaflet'
-import {
-  Icon,
-  Marker as MarkerType,
-  CircleMarker as CircleMarkerType,
-} from 'leaflet'
+import { Marker, Popup } from 'react-leaflet'
+import { Icon, Marker as MarkerType } from 'leaflet'
 
 // types
 import { type MpData } from '@/lib/trpc'
@@ -23,12 +19,12 @@ import IconButton from '@mui/material/IconButton'
 
 // images
 import mpIconImg from '@/assets/images/mp-marker.svg'
-import alertImg from '@/assets/images/alert.svg'
 import seenImg from '@/assets/images/seen.svg'
 import unseenImg from '@/assets/images/unseen.svg'
 
 // styles
 import './index.scss'
+import useChooseOnce from '@/hooks/useChooseOnce'
 
 const mpIcon = new Icon({
   iconUrl: mpIconImg,
@@ -36,29 +32,28 @@ const mpIcon = new Icon({
   iconAnchor: [12.5, 50],
 })
 
-const alertIcon = new Icon({
-  iconUrl: alertImg,
-  iconSize: [30, 30],
-  iconAnchor: [15, 80],
-})
-
 interface Props {
   mpData: MpData
 }
 
 export default function MpMarker({ mpData }: Props) {
-  // const markerRef = useRef<CircleMarkerType>(null)
   const markerRef = useRef<MarkerType>(null)
 
   const { closestMpId } = useUserLocation()
   const isClosest = closestMpId === mpData.id
 
-  const { mutate: scoreMp } = useMpScore()
+  const { mutate: vote, isLoading: isScoreLoading } = useMpScore()
 
   const { timerString } = useLifeTimer({
     lifeStartDate: mpData.dateLastSeen,
     lifeSpanSeconds: Infinity,
   })
+
+  const { choose, hasChosen, chosenOption } = useChooseOnce({
+    key: mpData.id,
+    options: ['seen', 'unseen'],
+  })
+  const canChoose = !hasChosen && !isScoreLoading
 
   useEffect(() => {
     if (isClosest) {
@@ -66,40 +61,72 @@ export default function MpMarker({ mpData }: Props) {
     }
   }, [markerRef.current, closestMpId])
 
-  const handleSeen = () => {
-    scoreMp({
-      mpId: mpData.id,
-      score: 1,
-    })
+  const handleUpvote = () => {
+    if (!canChoose) return
+    vote(
+      {
+        mpId: mpData.id,
+        score: 1,
+      },
+      {
+        onSuccess: () => {
+          choose('seen')
+        },
+      }
+    )
   }
 
-  const handleUnSeen = () => {
-    scoreMp({
-      mpId: mpData.id,
-      score: -1,
-    })
+  const handleDownvote = () => {
+    if (!canChoose) return
+    vote(
+      {
+        mpId: mpData.id,
+        score: -1,
+      },
+      {
+        onSuccess: () => {
+          choose('unseen')
+        },
+      }
+    )
   }
 
   return (
     <>
-      <Marker position={mpData.position} icon={mpIcon} ref={markerRef}>
-        {/* <CircleMarker center={mpData.position} color="red" ref={markerRef}> */}
+      <Marker
+        position={mpData.position}
+        icon={mpIcon}
+        ref={markerRef}
+        draggable
+      >
         <Popup closeButton={false} offset={[0, -45]} autoPan={false}>
           <div className="mp-popup">
             <div className="votes">
               <IconButton
                 size="small"
-                className="vote"
+                className={`vote ${
+                  chosenOption
+                    ? chosenOption === 'unseen'
+                      ? 'chosen'
+                      : 'not-chosen'
+                    : ''
+                }`}
                 color="error"
-                onClick={handleUnSeen}
+                onClick={handleDownvote}
               >
                 <img src={unseenImg} alt="unseen" />
               </IconButton>
               <IconButton
                 size="small"
-                className="vote"
+                className={`vote ${
+                  chosenOption
+                    ? chosenOption === 'seen'
+                      ? 'chosen'
+                      : 'not-chosen'
+                    : ''
+                }`}
                 color="success"
-                onClick={handleSeen}
+                onClick={handleUpvote}
               >
                 <img src={seenImg} alt="seen" />
               </IconButton>
@@ -120,15 +147,6 @@ export default function MpMarker({ mpData }: Props) {
           </div>
         </Popup>
       </Marker>
-      {/* </CircleMarker> */}
-      {/* {isClosest ? (
-        <Marker
-          position={mpData.position}
-          icon={alertIcon}
-          interactive={false}
-          draggable
-        />
-      ) : null} */}
     </>
   )
 }

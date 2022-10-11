@@ -18,8 +18,8 @@ export default function UserMarker() {
   const hasFlownToUser = useRef(false)
 
   useEffect(() => {
-    if (userLocation) {
-      !hasFlownToUser.current && map.flyTo(userLocation, 15)
+    if (userLocation && !hasFlownToUser.current) {
+      map.flyTo(userLocation, 15)
       hasFlownToUser.current = true
     }
   }, [userLocation])

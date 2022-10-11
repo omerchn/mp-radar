@@ -1,14 +1,14 @@
 import { type LatLng } from 'leaflet'
 
 // interfaces
-import { MpDataI } from '@/interfaces'
+import { type MpData } from '@/lib/trpc'
 
 export default function getClosestMp(
   userLocation: LatLng,
-  mps: Array<MpDataI>
-): MpDataI | undefined {
+  mps: Array<MpData>
+): MpData | undefined {
   let closestDistance: number = Infinity
-  let closestMp: MpDataI | undefined = undefined
+  let closestMp: MpData | undefined = undefined
 
   mps.forEach((mp) => {
     const distance = userLocation.distanceTo(mp.position)
