@@ -59,15 +59,17 @@ export default function AddMpMarker({ onDone, onCancel }: Props) {
         ref={markerRef}
         title="הוסף מלשין"
         draggable
-        zIndexOffset={1}
+        zIndexOffset={1000}
         eventHandlers={{
           dragend: openPopup,
+          click: openPopup,
         }}
       >
         <Popup
           closeButton={false}
           offset={[0, -45]}
-          autoPan={false}
+          autoPan
+          keepInView
           autoClose={false}
           closeOnClick={false}
           closeOnEscapeKey={false}
@@ -75,7 +77,7 @@ export default function AddMpMarker({ onDone, onCancel }: Props) {
         >
           <div className="controls">
             <IconButton
-              title="ביטול"
+              title="בטל"
               size="small"
               className="control cancel"
               color="error"
@@ -84,7 +86,7 @@ export default function AddMpMarker({ onDone, onCancel }: Props) {
               <CancelIcon />
             </IconButton>
             <IconButton
-              title="הוספה"
+              title="הוסף"
               size="small"
               className="control done"
               color="success"

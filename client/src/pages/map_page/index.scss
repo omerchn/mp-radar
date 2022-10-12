@@ -5,13 +5,22 @@
   user-select: none;
 }
 
+.leaflet-marker-icon {
+  transition: opacity 0.2s;
+}
+
 .leaflet-popup-content-wrapper {
-  // background: none;
-  // box-shadow: none;
+  border-radius: 30px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1), 0 3px 3px rgba(0, 0, 0, 0.2);
 
   .leaflet-popup-content {
     margin: 0.5em 0;
   }
+}
+
+.leaflet-right {
+  left: 0;
+  right: auto;
 }
 
 .leaflet-control-attribution {

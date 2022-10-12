@@ -1,18 +1,14 @@
 import { useEffect, useRef } from 'react'
-import { Icon } from 'leaflet'
 import { Marker, useMap } from 'react-leaflet'
 
 // images
-import userIconImg from '@/assets/images/user-marker.svg'
 import { useUserLocation } from '@/context/UserLocation'
 
-const userIcon = new Icon({
-  iconUrl: userIconImg,
-  iconSize: [25, 50],
-  iconAnchor: [12.5, 50],
-})
+interface Props {
+  isDisabled?: boolean
+}
 
-export default function UserMarker() {
+export default function UserMarker({ isDisabled }: Props) {
   const { userLocation } = useUserLocation()
   const map = useMap()
   const hasFlownToUser = useRef(false)
@@ -34,10 +30,11 @@ export default function UserMarker() {
     <Marker
       position={userLocation}
       title="אני"
-      // icon={userIcon}
       eventHandlers={{
         click: flyToUser,
       }}
+      zIndexOffset={-1}
+      opacity={isDisabled ? 0.5 : 1}
     />
   ) : null
 }

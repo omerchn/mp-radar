@@ -100,7 +100,6 @@ export default function MpMarker({ mpData, isDisabled }: Props) {
         ref={markerRef}
         title="מלשין"
         opacity={isDisabled ? 0.5 : 1}
-        interactive={!isDisabled}
       >
         <Popup closeButton={false} offset={[0, -45]} autoPan={false}>
           <div className="mp-popup">

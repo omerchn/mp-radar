@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { MapContainer, TileLayer } from 'react-leaflet'
 import { LatLng } from 'leaflet'
+import toast from 'react-hot-toast'
 
 // queries
 import { useAddMp, useMps } from '@/lib/trpc'
@@ -18,7 +19,7 @@ import AddMpMarker from '@/components/AddMpMarker'
 import './index.scss'
 import Overlay from './Overlay'
 
-export default function Map() {
+export default function MapPage() {
   const { data: mps } = useMps()
   const { mutate: addMp } = useAddMp()
   const [isAdding, setIsAdding] = useState(false)
@@ -37,6 +38,18 @@ export default function Map() {
     )
   }
 
+  const handleStartAdd = () => {
+    setIsAdding(true)
+    toast('גרור את הסימון למקום', {
+      duration: Infinity,
+    })
+  }
+
+  // handle finish add
+  useEffect(() => {
+    if (!isAdding) toast.dismiss()
+  }, [isAdding])
+
   const handleCancel = () => {
     setIsAdding(false)
   }
@@ -49,7 +62,7 @@ export default function Map() {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-          <UserMarker />
+          <UserMarker isDisabled={isAdding} />
           <MarkerClusterGroup>
             {mps?.map((mp) => (
               <MpMarker key={mp.id} mpData={mp} isDisabled={isAdding} />
@@ -60,7 +73,7 @@ export default function Map() {
           )}
         </UserLocationProvider>
       </MapContainer>
-      <Overlay onStartAdd={() => setIsAdding(true)} />
+      <Overlay onStartAdd={handleStartAdd} hideSpeedDial={isAdding} />
     </>
   )
 }
