@@ -2,13 +2,13 @@ import Box from '@mui/material/Box'
 import MuiSpeedDial from '@mui/material/SpeedDial'
 import SpeedDialIcon from '@mui/material/SpeedDialIcon'
 import SpeedDialAction from '@mui/material/SpeedDialAction'
-import RoomIcon from '@mui/icons-material/Room'
+import AddLocationIcon from '@mui/icons-material/AddLocationAltRounded'
 
 interface Props {
-  onAction: () => void
+  onStartAdd: () => void
 }
 
-export default function SpeedDial({ onAction }: Props) {
+export default function SpeedDial({ onStartAdd }: Props) {
   return (
     <Box
       sx={{
@@ -30,9 +30,9 @@ export default function SpeedDial({ onAction }: Props) {
       >
         <SpeedDialAction
           key="סימון"
-          icon={<RoomIcon />}
-          tooltipTitle="סימון"
-          onClick={onAction}
+          icon={<AddLocationIcon />}
+          tooltipTitle="הוסף סימון"
+          onClick={onStartAdd}
         />
       </MuiSpeedDial>
     </Box>

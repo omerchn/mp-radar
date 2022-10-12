@@ -13,18 +13,18 @@ import { useUserLocation } from '@/context/UserLocation'
 
 // custom hooks
 import useLifeTimer from '@/hooks/useLifeTimer'
+import useChooseOnce from '@/hooks/useChooseOnce'
 
 // components
 import IconButton from '@mui/material/IconButton'
 
 // images
-import mpIconImg from '@/assets/images/mp-marker-2.svg'
+import mpIconImg from '@/assets/images/mp-marker.svg'
 import seenImg from '@/assets/images/seen.svg'
 import unseenImg from '@/assets/images/unseen.svg'
 
 // styles
 import './index.scss'
-import useChooseOnce from '@/hooks/useChooseOnce'
 
 const mpIcon = new Icon({
   iconUrl: mpIconImg,
@@ -34,9 +34,10 @@ const mpIcon = new Icon({
 
 interface Props {
   mpData: MpData
+  isDisabled?: boolean
 }
 
-export default function MpMarker({ mpData }: Props) {
+export default function MpMarker({ mpData, isDisabled }: Props) {
   const markerRef = useRef<MarkerType>(null)
 
   const { closestMpId } = useUserLocation()
@@ -98,6 +99,8 @@ export default function MpMarker({ mpData }: Props) {
         icon={mpIcon}
         ref={markerRef}
         title="מלשין"
+        opacity={isDisabled ? 0.5 : 1}
+        interactive={!isDisabled}
       >
         <Popup closeButton={false} offset={[0, -45]} autoPan={false}>
           <div className="mp-popup">

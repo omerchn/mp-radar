@@ -1,0 +1,25 @@
+.add-popup {
+  z-index: 1;
+
+  .leaflet-popup-content-wrapper {
+    border-radius: 2em;
+  }
+
+  .leaflet-popup-tip-container {
+    display: none;
+  }
+
+  .controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+    padding: 0 0.3em;
+
+    .control {
+      height: 2em;
+      width: 2em;
+      margin: 0.1em;
+    }
+  }
+}
