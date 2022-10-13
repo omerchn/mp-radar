@@ -6,23 +6,22 @@ import { EventEmitter } from 'events'
 import { observable } from '@trpc/server/observable'
 const ee = new EventEmitter()
 
-// types
-import { MpData } from '../placeholder/interfaces'
-
-// data
-import { mps } from '../placeholder/data'
+// models
+import { type MpData, Mp } from '../models/Mp'
 
 // router
 export const mpsRouter = createRouter({
-  getAll: baseProcedure.query(() => {
-    return mps
+  getAll: baseProcedure.query(async () => {
+    return (await Mp.find()) as MpData[]
   }),
-  getOne: baseProcedure.input(z.string()).query(({ input: mpId }) => {
-    return mps.find((mp) => mp.id === mpId)
+  getOne: baseProcedure.input(z.string()).query(async ({ input: mpId }) => {
+    return (await Mp.findOne({
+      _id: mpId,
+    })) as MpData
   }),
   onUpdate: baseProcedure.subscription(() =>
     observable<MpData[]>((emit) => {
-      const onUpdate = (mps: MpData[]) => {
+      const onUpdate = async (mps: MpData[]) => {
         emit.next(mps)
       }
       ee.on('change', onUpdate)
@@ -38,30 +37,42 @@ export const mpsRouter = createRouter({
         dateSeen: z.date(),
       })
     )
-    .mutation(async ({ input }) => {
-      const mp = {
-        id: Date.now().toString(),
-        position: input.position,
-        dateLastSeen: input.dateSeen,
+    .mutation(async ({ input: { position, dateSeen } }) => {
+      const newMp = new Mp({
+        position,
+        dateLastSeen: dateSeen,
         score: 0,
-      }
-      mps.push(mp)
-      ee.emit('change', mps)
-      return mps
+      })
+      await newMp.save()
+      ee.emit('change', (await Mp.find()) as MpData[])
+      return newMp as MpData
     }),
   score: baseProcedure
     .input(
       z.object({
         mpId: z.string(),
-        score: z.number(),
+        up: z.boolean(),
+        dateSeen: z.date().optional(),
       })
     )
-    .mutation(({ input: { mpId, score } }) => {
-      const mp = mps.find((mp) => mp.id === mpId)
-      if (mp) {
-        mp.score += score
-      }
-      ee.emit('change', mps)
-      return mps
+    .mutation(async ({ input: { mpId, up, dateSeen } }) => {
+      const updatedMp = (await Mp.findByIdAndUpdate(
+        mpId,
+        {
+          $inc: {
+            score: up ? 1 : -1,
+          },
+          $set: up
+            ? {
+                dateLastSeen: dateSeen,
+              }
+            : {},
+        },
+        {
+          new: true,
+        }
+      )) as MpData
+      ee.emit('change', (await Mp.find()) as MpData[])
+      return updatedMp
     }),
 })

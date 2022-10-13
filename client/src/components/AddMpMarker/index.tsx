@@ -36,7 +36,8 @@ export default function AddMpMarker({ onDone, onCancel }: Props) {
     markerRef.current?.openPopup()
   }
 
-  const handleDone = () => {
+  const handleDone = (e: MouseEvent) => {
+    e.stopPropagation()
     const location = markerRef.current?.getLatLng()
     if (!location) return
     onDone(location)

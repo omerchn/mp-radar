@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { Marker, Popup } from 'react-leaflet'
 import { Icon, Marker as MarkerType } from 'leaflet'
+import toast from 'react-hot-toast'
 
 // types
 import { type MpData } from '@/lib/trpc'
@@ -23,6 +24,9 @@ import mpIconImg from '@/assets/images/mp-marker.svg'
 import seenImg from '@/assets/images/seen.svg'
 import unseenImg from '@/assets/images/unseen.svg'
 
+import SeenIcon from '@mui/icons-material/RemoveRedEyeOutlined'
+import UnseenIcon from '@mui/icons-material/VisibilityOffOutlined'
+
 // styles
 import './index.scss'
 
@@ -41,7 +45,7 @@ export default function MpMarker({ mpData, isDisabled }: Props) {
   const markerRef = useRef<MarkerType>(null)
 
   const { closestMpId } = useUserLocation()
-  const isClosest = closestMpId === mpData.id
+  const isClosest = closestMpId === mpData._id.toString()
 
   const { mutate: vote, isLoading: isScoreLoading } = useMpScore()
 
@@ -51,7 +55,7 @@ export default function MpMarker({ mpData, isDisabled }: Props) {
   })
 
   const { choose, hasChosen, chosenOption } = useChooseOnce({
-    key: mpData.id,
+    key: mpData._id.toString(),
     options: ['seen', 'unseen'],
   })
   const canChoose = !hasChosen && !isScoreLoading
@@ -62,35 +66,30 @@ export default function MpMarker({ mpData, isDisabled }: Props) {
     }
   }, [markerRef.current, closestMpId])
 
-  const handleUpvote = () => {
+  const handleVote = (up: boolean) => {
     if (!canChoose) return
     vote(
       {
-        mpId: mpData.id,
-        score: 1,
+        mpId: mpData._id.toString(),
+        up,
+        dateSeen: new Date(),
       },
       {
         onSuccess: () => {
-          choose('seen')
+          choose(up ? 'seen' : 'unseen')
+        },
+        onError: () => {
+          toast.error('אירעה שגיאה')
         },
       }
     )
   }
 
-  const handleDownvote = () => {
-    if (!canChoose) return
-    vote(
-      {
-        mpId: mpData.id,
-        score: -1,
-      },
-      {
-        onSuccess: () => {
-          choose('unseen')
-        },
-      }
-    )
-  }
+  useEffect(() => {
+    let tId
+    if (isScoreLoading) tId = toast.loading('טוען...', { duration: Infinity })
+    else toast.dismiss(tId)
+  }, [isScoreLoading])
 
   return (
     <>
@@ -115,9 +114,9 @@ export default function MpMarker({ mpData, isDisabled }: Props) {
                     : ''
                 }`}
                 color="error"
-                onClick={handleDownvote}
+                onClick={() => handleVote(false)}
               >
-                <img src={unseenImg} alt="unseen" />
+                <UnseenIcon />
               </IconButton>
               <IconButton
                 title="ראיתי"
@@ -130,9 +129,9 @@ export default function MpMarker({ mpData, isDisabled }: Props) {
                     : ''
                 }`}
                 color="success"
-                onClick={handleUpvote}
+                onClick={() => handleVote(true)}
               >
-                <img src={seenImg} alt="seen" />
+                <SeenIcon />
               </IconButton>
             </div>
             <div className="last-seen">

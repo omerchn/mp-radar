@@ -2,7 +2,7 @@
   z-index: 1;
 
   .leaflet-popup-content-wrapper {
-    min-height: 4.3em;
+    min-height: 4.8em;
   }
 
   .leaflet-popup-tip-container {
@@ -14,12 +14,11 @@
     justify-content: center;
     align-items: center;
     width: fit-content;
-    padding: 0 0.3em;
+    padding: 0 0.5em;
 
     .control {
-      height: 2em;
-      width: 2em;
-      margin: 0.1em;
+      height: 2.5em;
+      width: 2.5em;
     }
   }
 }

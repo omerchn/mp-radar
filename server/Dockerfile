@@ -7,4 +7,4 @@ COPY . .
 RUN npm run build
 EXPOSE 3000
 
-CMD [ "node", "dist/ws-server" ]
+CMD [ "node", "dist/server" ]

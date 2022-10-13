@@ -19,10 +19,10 @@
     width: 2em;
     margin: 0.2em;
 
-    img {
+    > svg {
       pointer-events: none;
-      height: 1em;
-      width: 1em;
+      height: 0.8em;
+      width: 0.8em;
     }
 
     &.chosen {

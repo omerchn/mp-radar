@@ -30,3 +30,19 @@
     display: none !important;
   }
 }
+
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+  animation: in 0.2s;
+}
+
+@keyframes in {
+  from {
+    translate: 0 -0.5em;
+    opacity: 0;
+  }
+  to {
+    translate: 0;
+    opacity: 1;
+  }
+}

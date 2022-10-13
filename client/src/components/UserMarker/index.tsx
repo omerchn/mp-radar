@@ -30,9 +30,7 @@ export default function UserMarker({ isDisabled }: Props) {
     <Marker
       position={userLocation}
       title="אני"
-      eventHandlers={{
-        click: flyToUser,
-      }}
+      interactive={false}
       zIndexOffset={-1}
       opacity={isDisabled ? 0.5 : 1}
     />

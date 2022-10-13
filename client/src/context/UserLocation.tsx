@@ -41,12 +41,12 @@ export function UserLocationProvider({ children }: Props) {
   })
 
   useInterval(() => {
-    map.locate()
+    map.locate({ enableHighAccuracy: true })
   }, 1000)
 
   useEffect(() => {
     if (userLocation && mps) {
-      setClosestMpId(getClosestMp(userLocation, mps)?.id)
+      setClosestMpId(getClosestMp(userLocation, mps)?._id.toString())
     }
   }, [userLocation, mps])
 
