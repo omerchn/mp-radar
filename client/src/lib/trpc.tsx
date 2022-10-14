@@ -13,7 +13,9 @@ export type MpData = NonNullable<
 
 // websocket client
 const wsClient = createWSClient({
-  url: `ws://localhost:3000`,
+  url: import.meta.env.DEV
+    ? 'ws://localhost:3000'
+    : 'ws://knwjac7v4q.eu-west-1.awsapprunner.com',
 })
 
 // trpc initialization
