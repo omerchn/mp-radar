@@ -1,34 +1,31 @@
 import { useEffect, useRef } from 'react'
 import { Marker, Popup } from 'react-leaflet'
 import { Icon, Marker as MarkerType } from 'leaflet'
+import toast from 'react-hot-toast'
 
-// interfaces
-import MpData from '@/interfaces/MpData'
+// types
+import { type MpData } from '@/lib/trpc'
 
 // mutations
-import {
-  useRemoveMp,
-  useSeenMp,
-  useUnseenMp,
-} from '@/lib/react-query/mutations'
+import { useMpScore } from '@/lib/trpc'
 
 // context
 import { useUserLocation } from '@/context/UserLocation'
 
 // custom hooks
 import useLifeTimer from '@/hooks/useLifeTimer'
-
-// defaults
-import { MP_LIFE_SPAN_SECONDS } from '@/utils/defaults'
+import useChooseOnce from '@/hooks/useChooseOnce'
 
 // components
 import IconButton from '@mui/material/IconButton'
 
 // images
 import mpIconImg from '@/assets/images/mp-marker.svg'
-import alertImg from '@/assets/images/alert.svg'
 import seenImg from '@/assets/images/seen.svg'
 import unseenImg from '@/assets/images/unseen.svg'
+
+import SeenIcon from '@mui/icons-material/RemoveRedEyeOutlined'
+import UnseenIcon from '@mui/icons-material/VisibilityOffOutlined'
 
 // styles
 import './index.scss'
@@ -39,31 +36,29 @@ const mpIcon = new Icon({
   iconAnchor: [12.5, 50],
 })
 
-const alertIcon = new Icon({
-  iconUrl: alertImg,
-  iconSize: [30, 30],
-  iconAnchor: [15, 80],
-})
-
 interface Props {
   mpData: MpData
+  isDisabled?: boolean
 }
 
-export default function MpMarker({ mpData }: Props) {
+export default function MpMarker({ mpData, isDisabled }: Props) {
   const markerRef = useRef<MarkerType>(null)
 
   const { closestMpId } = useUserLocation()
-  const isClosest = closestMpId === mpData.id
+  const isClosest = closestMpId === mpData._id.toString()
 
-  const { mutate: removeMp } = useRemoveMp(mpData.id)
-  const { mutate: seenMp } = useSeenMp(mpData.id)
-  const { mutate: unseenMp } = useUnseenMp(mpData.id)
+  const { mutate: vote, isLoading: isScoreLoading } = useMpScore()
 
-  const { timerString, isDead } = useLifeTimer({
+  const { timerString } = useLifeTimer({
     lifeStartDate: mpData.dateLastSeen,
-    lifeSpanSeconds: MP_LIFE_SPAN_SECONDS,
-    onDead: removeMp,
+    lifeSpanSeconds: Infinity,
   })
+
+  const { choose, hasChosen, chosenOption } = useChooseOnce({
+    key: mpData._id.toString(),
+    options: ['seen', 'unseen'],
+  })
+  const canChoose = !hasChosen && !isScoreLoading
 
   useEffect(() => {
     if (isClosest) {
@@ -71,35 +66,72 @@ export default function MpMarker({ mpData }: Props) {
     }
   }, [markerRef.current, closestMpId])
 
-  const handleSeen = () => {
-    seenMp()
+  const handleVote = (up: boolean) => {
+    if (!canChoose) return
+    vote(
+      {
+        mpId: mpData._id.toString(),
+        up,
+        dateSeen: new Date(),
+      },
+      {
+        onSuccess: () => {
+          choose(up ? 'seen' : 'unseen')
+        },
+        onError: () => {
+          toast.error('אירעה שגיאה')
+        },
+      }
+    )
   }
 
-  const handleUnSeen = () => {
-    unseenMp()
-  }
+  useEffect(() => {
+    let tId
+    if (isScoreLoading) tId = toast.loading('טוען...', { duration: Infinity })
+    else toast.dismiss(tId)
+  }, [isScoreLoading])
 
-  return !isDead ? (
+  return (
     <>
-      <Marker position={mpData.position} icon={mpIcon} ref={markerRef}>
+      <Marker
+        position={mpData.position}
+        icon={mpIcon}
+        ref={markerRef}
+        title="מלשין"
+        opacity={isDisabled ? 0.5 : 1}
+      >
         <Popup closeButton={false} offset={[0, -45]} autoPan={false}>
           <div className="mp-popup">
             <div className="votes">
               <IconButton
+                title="לא ראיתי"
                 size="small"
-                className="vote"
+                className={`vote ${
+                  chosenOption
+                    ? chosenOption === 'unseen'
+                      ? 'chosen'
+                      : 'not-chosen'
+                    : ''
+                }`}
                 color="error"
-                onClick={handleUnSeen}
+                onClick={() => handleVote(false)}
               >
-                <img src={unseenImg} alt="unseen" />
+                <UnseenIcon />
               </IconButton>
               <IconButton
+                title="ראיתי"
                 size="small"
-                className="vote"
+                className={`vote ${
+                  chosenOption
+                    ? chosenOption === 'seen'
+                      ? 'chosen'
+                      : 'not-chosen'
+                    : ''
+                }`}
                 color="success"
-                onClick={handleSeen}
+                onClick={() => handleVote(true)}
               >
-                <img src={seenImg} alt="seen" />
+                <SeenIcon />
               </IconButton>
             </div>
             <div className="last-seen">
@@ -118,14 +150,6 @@ export default function MpMarker({ mpData }: Props) {
           </div>
         </Popup>
       </Marker>
-      {isClosest ? (
-        <Marker
-          position={mpData.position}
-          icon={alertIcon}
-          interactive={false}
-          draggable
-        />
-      ) : null}
     </>
-  ) : null
+  )
 }

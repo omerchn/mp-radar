@@ -1,4 +1,5 @@
 .mp-popup {
+  font-family: ValeraRound;
   position: relative;
   text-align: center;
   display: flex;
@@ -13,15 +14,33 @@
   }
 
   .vote {
-    box-shadow: 0 0 0.5em #999;
+    box-shadow: 0 0 0.5em #bbb;
     height: 2em;
     width: 2em;
     margin: 0.2em;
 
-    img {
+    > svg {
       pointer-events: none;
-      height: 1em;
-      width: 1em;
+      height: 0.8em;
+      width: 0.8em;
+    }
+
+    &.chosen {
+      box-shadow: none;
+      background: #ededed80;
+    }
+
+    &.not-chosen {
+      opacity: 0;
+      width: 0;
+      padding: 0;
+      margin: 0;
+      box-shadow: none;
+      transition: 0.2s;
+
+      img {
+        display: none;
+      }
     }
   }
 

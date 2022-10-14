@@ -27,13 +27,14 @@ export default function useLifeTimer({
   )
 
   const calcTimer = () => {
-    const timeFromStart = Date.now() - lifeStartDate.getTime()
+    const timeFromStart = Date.now() - new Date(lifeStartDate).getTime()
     setTimerString(formatTimerString(timeFromStart / 1000))
   }
 
   const calcLifePercentage = () => {
     if (lifePercentage === 0) return
-    const secondsFromStart = (Date.now() - lifeStartDate.getTime()) / 1000
+    const secondsFromStart =
+      (Date.now() - new Date(lifeStartDate).getTime()) / 1000
     const secondsToDeath = lifeSpanSeconds - secondsFromStart
 
     setLifePercentage(

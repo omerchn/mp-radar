@@ -1,7 +1,7 @@
 import { type LatLng } from 'leaflet'
 
 // interfaces
-import MpData from '@/interfaces/MpData'
+import { type MpData } from '@/lib/trpc'
 
 export default function getClosestMp(
   userLocation: LatLng,

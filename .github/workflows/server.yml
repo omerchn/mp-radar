@@ -2,33 +2,14 @@ name: Server Workflow
 
 on:
   push:
-    branches: [ main ]
-    paths: [ server/** ]
+    branches: [main]
+    paths: [server/**]
   pull_request:
-    branches: [ main ]
-    paths: [ server/** ]
+    branches: [main]
+    paths: [server/**]
 
 jobs:
-
-  test:
-    runs-on: ubuntu-latest
-    environment: production
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Setup node js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16.x
-
-      - name: Run Tests
-        run: |
-          cd server
-          npm ci
-          npm run test:ci 
-
   deploy:
-    needs: test
     runs-on: ubuntu-latest
     environment: production
     steps:
@@ -44,11 +25,11 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
-        
+
       - name: Set outputs
         id: vars
         run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
-      
+
       - name: Build, tag, and push docker image to Amazon ECR
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
