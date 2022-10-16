@@ -42,7 +42,7 @@ export function UserLocationProvider({ children }: Props) {
 
   useInterval(() => {
     map.locate({ enableHighAccuracy: true })
-  }, 1000)
+  }, 5000)
 
   useEffect(() => {
     if (userLocation && mps) {
