@@ -57,7 +57,7 @@ jobs:
           region: ${{ env.REGION }}
           image: ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE }}:${{ steps.vars.outputs.sha_short }}
           secrets: |
-            MONGO_URI=MONGO_URI
+            MONGO_URI=MONGO_URI:latest
 
       - name: Show Output
         run: echo ${{ steps.deploy.outputs.url }}
