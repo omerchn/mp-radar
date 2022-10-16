@@ -39,10 +39,10 @@ jobs:
 
       - id: deploy
         name: Deploy To App Engine
-        uses: 'google-github-actions/deploy-appengine@v0'
-        with:
-          deliverables: ${{ env.APP_ENGINE_YML }}
-          project_id: ${{ env.PROJECT_ID }}
+        run: |
+          mv ./client/app.yml ./client/dist/
+          cd ./client/dist
+          gcloud app deploy ./app.yml --promote
 
       - name: show output
         run: 'echo ${{ steps.deploy.outputs.url }}'
