@@ -40,4 +40,4 @@ mongoose
 // Cron Job to clean-up Mps
 import { cleanMps } from './utils/cleanMps'
 cleanMps()
-setInterval(cleanMps, 1000 * 60 * 5) // every 5 minutes.
+setInterval(cleanMps, 1000 * 60 * 5) // every 5 minutes
