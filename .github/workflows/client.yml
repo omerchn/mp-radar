@@ -8,6 +8,10 @@ on:
     branches: [main]
     paths: [client/**]
 
+env:
+  PROJECT_ID: mp-radar-365513
+  APP_ENGINE_YML: './client/app.yml'
+
 jobs:
   deploy:
     permissions:
@@ -37,8 +41,12 @@ jobs:
         id: vars
         run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
 
-      - name: Deploy to App Engine
-        id: deploy
-        run: |
-          cd client
-          gcloud app deploy ./app.yml --no-cache
+      - id: deploy
+        name: Deploy To App Engine
+        uses: 'google-github-actions/deploy-appengine@v0'
+        with:
+          deliverables: ${{ env.APP_ENGINE_YML }}
+          project_id: ${{ env.PROJECT_ID }}
+
+      - name: show output
+        run: 'echo ${{ steps.deploy.outputs.url }}'
