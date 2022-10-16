@@ -29,6 +29,7 @@ export default function Overlay({ onStartAdd, hideSpeedDial, map }: Props) {
     <div
       style={{
         position: 'absolute',
+        bottom: 0,
         zIndex: 1000,
         width: '100%',
       }}
