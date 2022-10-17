@@ -39,6 +39,3 @@ jobs:
           mv ./client/app.yml ./client/dist/
           cd ./client/dist
           gcloud app deploy ./app.yml --promote
-
-      - name: show output
-        run: 'echo ${{ steps.deploy.outputs.url }}'
