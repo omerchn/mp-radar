@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { inferProcedureOutput } from '@trpc/server'
 import { createWSClient, wsLink } from '@trpc/client'
 import { createTRPCReact } from '@trpc/react'
@@ -44,18 +44,30 @@ export function TrpcProvider({ children }: { children: React.ReactNode }) {
 // hooks
 export function useMps() {
   const utils = trpc.useContext()
+  const [enabled, setEnabled] = useState(true)
+
+  useEffect(() => {
+    if (!enabled) {
+      setEnabled(true)
+    }
+  }, [enabled])
 
   const mpsQuery = trpc.mps.getAll.useQuery(undefined, {
     staleTime: Infinity,
   })
 
   trpc.mps.onUpdate.useSubscription(undefined, {
+    onStarted: () => {
+      console.log('✅ Connected to WebSocket!')
+    },
+    onError: (err) => {
+      console.log('❌ Disconnected from WebSocket:', err)
+      setEnabled(false)
+    },
     onData: (data) => {
       utils.mps.getAll.setData(data)
     },
-    onError: (err) => {
-      console.log(err)
-    },
+    enabled,
   })
 
   return mpsQuery
