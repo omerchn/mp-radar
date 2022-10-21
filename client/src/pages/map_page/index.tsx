@@ -50,12 +50,6 @@ export default function MapPage() {
     else toast.dismiss(tId)
   }, [isAdding])
 
-  useEffect(() => {
-    let tId
-    if (isLoading) tId = toast.loading('טוען...', { duration: Infinity })
-    else toast.dismiss(tId)
-  }, [isLoading])
-
   return (
     <>
       <Fade in={isLoading} timeout={500}>
