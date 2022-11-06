@@ -34,13 +34,12 @@ export const mpsRouter = createRouter({
     .input(
       z.object({
         position: z.tuple([z.number(), z.number()]),
-        dateSeen: z.date(),
       })
     )
-    .mutation(async ({ input: { position, dateSeen } }) => {
+    .mutation(async ({ input: { position } }) => {
       const newMp = new Mp({
         position,
-        dateLastSeen: dateSeen,
+        dateLastSeen: new Date(),
         score: 0,
       })
       await newMp.save()
