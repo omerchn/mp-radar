@@ -1,6 +1,6 @@
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import { Marker, Popup } from 'react-leaflet'
-import { Icon, Marker as MarkerType } from 'leaflet'
+import { Icon } from 'leaflet'
 import toast from 'react-hot-toast'
 
 // types
@@ -8,9 +8,6 @@ import { type MpData } from '@/lib/trpc'
 
 // mutations
 import { useMpScore } from '@/lib/trpc'
-
-// context
-import { useUserLocation } from '@/context/UserLocation'
 
 // custom hooks
 import useLifeTimer from '@/hooks/useLifeTimer'
@@ -20,10 +17,7 @@ import useChooseOnce from '@/hooks/useChooseOnce'
 import IconButton from '@mui/material/IconButton'
 
 // images
-import mpIconImg from '@/assets/images/mp-marker.svg'
-import seenImg from '@/assets/images/seen.svg'
-import unseenImg from '@/assets/images/unseen.svg'
-
+import mpIconImg from '@/assets/images/mp-marker-2.svg'
 import SeenIcon from '@mui/icons-material/RemoveRedEyeOutlined'
 import UnseenIcon from '@mui/icons-material/VisibilityOffOutlined'
 
@@ -32,8 +26,8 @@ import './index.scss'
 
 const mpIcon = new Icon({
   iconUrl: mpIconImg,
-  iconSize: [25, 50],
-  iconAnchor: [12.5, 50],
+  iconSize: [40, 50],
+  iconAnchor: [20, 50],
 })
 
 interface Props {
@@ -42,11 +36,6 @@ interface Props {
 }
 
 export default function MpMarker({ mpData, isDisabled }: Props) {
-  const markerRef = useRef<MarkerType>(null)
-
-  const { closestMpId } = useUserLocation()
-  const isClosest = closestMpId === mpData._id.toString()
-
   const { mutate: vote, isLoading: isScoreLoading } = useMpScore()
 
   const { timerString } = useLifeTimer({
@@ -59,12 +48,6 @@ export default function MpMarker({ mpData, isDisabled }: Props) {
     options: ['seen', 'unseen'],
   })
   const canChoose = !hasChosen && !isScoreLoading
-
-  useEffect(() => {
-    if (isClosest) {
-      markerRef.current?.openPopup()
-    }
-  }, [markerRef.current, closestMpId])
 
   const handleVote = (up: boolean) => {
     if (!canChoose) return
@@ -96,7 +79,6 @@ export default function MpMarker({ mpData, isDisabled }: Props) {
       <Marker
         position={mpData.position}
         icon={mpIcon}
-        ref={markerRef}
         title="מלשין"
         opacity={isDisabled ? 0.5 : 1}
       >

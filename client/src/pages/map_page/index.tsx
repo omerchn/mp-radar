@@ -1,13 +1,10 @@
 import { useEffect, useState } from 'react'
-import { MapContainer, TileLayer, useMap } from 'react-leaflet'
-import { LatLng, Map } from 'leaflet'
+import { MapContainer, TileLayer, useMapEvents } from 'react-leaflet'
+import { LatLng } from 'leaflet'
 import toast from 'react-hot-toast'
 
 // queries
 import { useAddMp, useMps } from '@/lib/trpc'
-
-// context
-import { UserLocationProvider } from '@/context/UserLocation'
 
 // components
 import Overlay from './Overlay'
@@ -23,7 +20,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 import './index.scss'
 
 export default function MapPage() {
-  const [map, setMap] = useState<Map>()
+  const [followUser, setFollowUser] = useState(false)
   const { data: mps, isLoading: mpsLoading } = useMps()
   const { mutate: addMp, isLoading: addMpLoading } = useAddMp()
   const [isAdding, setIsAdding] = useState(false)
@@ -67,44 +64,44 @@ export default function MapPage() {
         </div>
       </Fade>
       <MapContainer center={[31.7, 35.06]} zoom={8}>
-        <UserLocationProvider>
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
-          <UserMarker isDisabled={isAdding} />
-          <MarkerClusterGroup>
-            {mps?.map((mp) => (
-              <MpMarker
-                key={mp._id.toString()}
-                mpData={mp}
-                isDisabled={isAdding}
-              />
-            ))}
-          </MarkerClusterGroup>
-          {isAdding && (
-            <AddMpMarker
-              onDone={handleAdd}
-              onCancel={() => setIsAdding(false)}
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        <UserMarker isDisabled={isAdding} setView={followUser} />
+        <MarkerClusterGroup>
+          {mps?.map((mp) => (
+            <MpMarker
+              key={mp._id.toString()}
+              mpData={mp}
+              isDisabled={isAdding}
             />
-          )}
-        </UserLocationProvider>
-        <SetMap setMap={setMap} />
+          ))}
+        </MarkerClusterGroup>
+        {isAdding && (
+          <AddMpMarker onDone={handleAdd} onCancel={() => setIsAdding(false)} />
+        )}
+        <ResetFollowUser setFollowUser={setFollowUser} />
       </MapContainer>
       <Overlay
         onStartAdd={() => setIsAdding(true)}
         hideSpeedDial={isAdding}
-        map={map}
+        followUser={followUser}
+        setFollowUser={setFollowUser}
       />
     </>
   )
 }
 
-interface Props {
-  setMap: React.Dispatch<React.SetStateAction<Map | undefined>>
-}
-const SetMap = ({ setMap }: Props) => {
-  const map = useMap()
-  useEffect(() => setMap(map), [map])
+const ResetFollowUser = ({
+  setFollowUser,
+}: {
+  setFollowUser: React.Dispatch<React.SetStateAction<boolean>>
+}) => {
+  useMapEvents({
+    drag() {
+      setFollowUser(false)
+    },
+  })
   return null
 }

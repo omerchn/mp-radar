@@ -6,7 +6,7 @@ import { Icon, LatLng, Marker as MarkerType } from 'leaflet'
 import IconButton from '@mui/material/IconButton'
 
 // images
-import AddMpImg from '@/assets/images/mp-marker-add.svg'
+import AddMpImg from '@/assets/images/mp-marker-add-2.svg'
 import DoneIcon from '@mui/icons-material/DoneRounded'
 import CancelIcon from '@mui/icons-material/CloseRounded'
 
@@ -15,8 +15,8 @@ import './index.scss'
 
 const addMpIcon = new Icon({
   iconUrl: AddMpImg,
-  iconSize: [30, 60],
-  iconAnchor: [15, 60],
+  iconSize: [40, 60],
+  iconAnchor: [20, 60],
 })
 
 interface Props {

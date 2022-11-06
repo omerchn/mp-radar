@@ -9,22 +9,21 @@ import Fab from '@mui/material/Fab'
 import AddLocationIcon from '@mui/icons-material/AddLocationAltRounded'
 import MenuIcon from '@mui/icons-material/UnfoldMoreRounded'
 import CloseIcon from '@mui/icons-material/CloseRounded'
-import { Map } from 'leaflet'
 import MyLocationIcon from '@mui/icons-material/MyLocationRounded'
 
 interface Props {
   onStartAdd: () => void
   hideSpeedDial: boolean
-  map: Map | undefined
+  followUser: boolean
+  setFollowUser: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export default function Overlay({ onStartAdd, hideSpeedDial, map }: Props) {
-  const handleFlyToUser = () => {
-    map?.locate({
-      enableHighAccuracy: true,
-      setView: true,
-    })
-  }
+export default function Overlay({
+  onStartAdd,
+  hideSpeedDial,
+  followUser,
+  setFollowUser,
+}: Props) {
   return (
     <div
       style={{
@@ -68,9 +67,9 @@ export default function Overlay({ onStartAdd, hideSpeedDial, map }: Props) {
             bottom: '1em',
             left: '1em',
           }}
-          onClick={handleFlyToUser}
+          onClick={() => setFollowUser(true)}
         >
-          <MyLocationIcon color="primary" />
+          <MyLocationIcon color={followUser ? 'primary' : 'disabled'} />
         </Fab>
       </Box>
     </div>

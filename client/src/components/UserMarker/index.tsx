@@ -1,21 +1,25 @@
 import { useEffect, useRef } from 'react'
 import { Marker, useMap } from 'react-leaflet'
 
-// images
-import { useUserLocation } from '@/context/UserLocation'
+// hooks
+import useLocateUser from '@/hooks/useLocateUser'
 
 interface Props {
   isDisabled?: boolean
+  setView?: boolean
 }
 
-export default function UserMarker({ isDisabled }: Props) {
-  const { userLocation } = useUserLocation()
+export default function UserMarker({ setView, isDisabled }: Props) {
   const map = useMap()
   const hasFlownToUser = useRef(false)
+  const { userLocation } = useLocateUser({
+    setView,
+    watch: true,
+  })
 
   const flyToUser = () => {
     if (!userLocation) return
-    map.flyTo(userLocation, 15, {
+    map.flyTo(userLocation, 14, {
       animate: false,
     })
   }
