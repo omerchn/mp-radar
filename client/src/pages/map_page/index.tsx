@@ -106,7 +106,6 @@ function ResetFollowUser({
 }) {
   useMapEvents({
     drag: () => followUser && setFollowUser(false),
-    zoom: (e) => followUser && setFollowUser(false),
   })
   return null
 }
