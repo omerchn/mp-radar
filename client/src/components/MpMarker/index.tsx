@@ -15,9 +15,10 @@ import useChooseOnce from '@/hooks/useChooseOnce'
 
 // components
 import IconButton from '@mui/material/IconButton'
+import ElementLoader from '../ElementLoader'
 
 // images
-import mpIconImg from '@/assets/images/mp-marker-2.svg'
+import mpIconImg from '@/assets/images/mp-marker.svg'
 import SeenIcon from '@mui/icons-material/RemoveRedEyeOutlined'
 import UnseenIcon from '@mui/icons-material/VisibilityOffOutlined'
 
@@ -68,11 +69,11 @@ export default function MpMarker({ mpData, isDisabled }: Props) {
     )
   }
 
-  useEffect(() => {
-    let tId
-    if (isScoreLoading) tId = toast.loading('טוען...', { duration: Infinity })
-    else toast.dismiss(tId)
-  }, [isScoreLoading])
+  // useEffect(() => {
+  //   let tId
+  //   if (isScoreLoading) tId = toast.loading('טוען...', { duration: Infinity })
+  //   else toast.dismiss(tId)
+  // }, [isScoreLoading])
 
   return (
     <>
@@ -132,6 +133,14 @@ export default function MpMarker({ mpData, isDisabled }: Props) {
           </div>
         </Popup>
       </Marker>
+      <ElementLoader
+        isLoading={isScoreLoading}
+        element={
+          document.querySelector(
+            '.leaflet-popup-content-wrapper:has(.mp-popup)'
+          ) as HTMLElement
+        }
+      />
     </>
   )
 }

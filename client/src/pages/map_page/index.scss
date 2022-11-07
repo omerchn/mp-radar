@@ -18,13 +18,18 @@
   }
 }
 
-.leaflet-right {
-  left: 0;
-  right: auto;
-}
+// .leaflet-right:has(.leaflet-control-attribution) {
+//   left: 0;
+//   right: auto;
+// }
+
+// .leaflet-bottom:has(.leaflet-control-attribution) {
+//   top: 0;
+//   bottom: auto;
+// }
 
 .leaflet-control-attribution {
-  font-size: 0.8em;
+  font-size: 0.7em;
 
   svg {
     display: none !important;

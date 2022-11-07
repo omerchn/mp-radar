@@ -1,0 +1,32 @@
+.element-loader-parent {
+  position: relative;
+
+  &.loading {
+    pointer-events: none;
+    overflow: hidden;
+
+    &.hide-on-load {
+      > :not(.element-loader) {
+        opacity: 0;
+      }
+    }
+
+    > .element-loader {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+}
+
+.element-loader {
+  z-index: 999;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: hsl(0, 0%, 100%, 0.5);
+  transition: opacity 0.5s;
+}

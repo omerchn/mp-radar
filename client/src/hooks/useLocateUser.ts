@@ -19,12 +19,12 @@ export default function useLocateUser(opts: Props = {}): LocateUser {
   const [isLocating, setIsLocating] = useState(false)
 
   const map = useMapEvents({
-    locationfound(e) {
+    locationfound: (e) => {
       setUserLocation(e.latlng)
       setIsLocating(false)
     },
-    locationerror(e) {
-      console.log(e)
+    locationerror: (e) => {
+      console.error(e)
       setIsLocating(false)
     },
   })
@@ -32,7 +32,11 @@ export default function useLocateUser(opts: Props = {}): LocateUser {
   useEffect(() => {
     map.stopLocate()
     setIsLocating(true)
-    map.locate({ watch: opts.watch, setView: opts.setView })
+    map.locate({
+      watch: opts.watch,
+      setView: opts.setView,
+      enableHighAccuracy: true,
+    })
   }, [opts.watch, opts.setView])
 
   useEffect(() => {

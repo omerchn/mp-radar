@@ -42,7 +42,8 @@ export default function MapPage() {
 
   useEffect(() => {
     let tId
-    if (isAdding) tId = toast('גרור את הסימון למקום', { duration: Infinity })
+    if (isAdding)
+      tId = toast('יש לגרור את הסימון למקום', { duration: Infinity })
     else toast.dismiss(tId)
   }, [isAdding])
 
@@ -64,8 +65,9 @@ export default function MapPage() {
       </Fade>
       <MapContainer center={[31.7, 35.06]} zoom={8}>
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+          url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png"
+          subdomains="abcd"
         />
         <UserMarker isDisabled={isAdding} setView={followUser} />
         <MarkerClusterGroup>
@@ -80,7 +82,10 @@ export default function MapPage() {
         {isAdding && (
           <AddMpMarker onDone={handleAdd} onCancel={() => setIsAdding(false)} />
         )}
-        <ResetFollowUser setFollowUser={setFollowUser} />
+        <ResetFollowUser
+          followUser={followUser}
+          setFollowUser={setFollowUser}
+        />
       </MapContainer>
       <Overlay
         onStartAdd={() => setIsAdding(true)}
@@ -92,15 +97,16 @@ export default function MapPage() {
   )
 }
 
-const ResetFollowUser = ({
+function ResetFollowUser({
+  followUser,
   setFollowUser,
 }: {
+  followUser: boolean
   setFollowUser: React.Dispatch<React.SetStateAction<boolean>>
-}) => {
+}) {
   useMapEvents({
-    drag() {
-      setFollowUser(false)
-    },
+    drag: () => followUser && setFollowUser(false),
+    zoom: (e) => followUser && setFollowUser(false),
   })
   return null
 }

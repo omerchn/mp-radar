@@ -11,7 +11,7 @@ export type MpData = NonNullable<
   inferProcedureOutput<AppRouter['mps']['getOne']>
 >
 
-// websocket client
+// trpc websocket client
 const wsClient = createWSClient({
   url: import.meta.env.DEV
     ? 'ws://localhost:3000'
@@ -47,9 +47,7 @@ export function useMps() {
   const [enabled, setEnabled] = useState(true)
 
   useEffect(() => {
-    if (!enabled) {
-      setEnabled(true)
-    }
+    if (!enabled) setEnabled(true)
   }, [enabled])
 
   const mpsQuery = trpc.mps.getAll.useQuery(undefined, {

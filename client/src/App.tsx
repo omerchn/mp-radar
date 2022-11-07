@@ -1,13 +1,14 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 
+// api
+import { TrpcProvider } from './lib/trpc'
+
 // pages
 import MapPage from './pages/map_page'
 
 // styles
 import './App.scss'
-
-import { TrpcProvider } from './lib/trpc'
 
 function App() {
   return (

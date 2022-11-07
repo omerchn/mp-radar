@@ -56,8 +56,15 @@ export default function Overlay({
           <SpeedDialAction
             key="סימון"
             icon={<AddLocationIcon />}
-            tooltipTitle="הוסף סימון"
-            onClick={onStartAdd}
+            tooltipTitle="הוספת סימון"
+            onClick={(e) => {
+              ;(
+                e.currentTarget.querySelector('.MuiFab-root') as
+                  | HTMLElement
+                  | undefined
+              )?.blur()
+              onStartAdd()
+            }}
             tooltipOpen
           />
         </SpeedDial>
