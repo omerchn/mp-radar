@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useLayoutEffect } from 'react'
 import { type Map, type LatLng } from 'leaflet'
 import { useMapEvents } from 'react-leaflet'
 import toast from 'react-hot-toast'
@@ -28,7 +28,6 @@ export default function useLocateUser(opts: Props = {}): LocateUser {
       setIsLocating(false)
     },
   })
-
   useEffect(() => {
     map.stopLocate()
     setIsLocating(true)
@@ -39,7 +38,7 @@ export default function useLocateUser(opts: Props = {}): LocateUser {
     })
   }, [opts.watch, opts.setView])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     let tId
     if (isLocating) tId = toast('מאתר מיקום...', { duration: Infinity })
     else toast.dismiss(tId)
