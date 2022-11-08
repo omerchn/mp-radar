@@ -40,7 +40,7 @@ export default function useLocateUser(opts: Props = {}): LocateUser {
 
   useLayoutEffect(() => {
     let tId
-    if (isLocating) tId = toast('מאתר מיקום...', { duration: Infinity })
+    if (isLocating) tId = toast.loading('מאתר מיקום', { duration: Infinity })
     else toast.dismiss(tId)
   }, [isLocating])
 

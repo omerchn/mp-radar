@@ -90,7 +90,6 @@ export default function MapPage() {
       <Overlay
         onStartAdd={() => setIsAdding(true)}
         hideSpeedDial={isAdding}
-        followUser={followUser}
         setFollowUser={setFollowUser}
       />
     </>
@@ -106,6 +105,7 @@ function ResetFollowUser({
 }) {
   useMapEvents({
     drag: () => followUser && setFollowUser(false),
+    zoomend: () => followUser && setFollowUser(false),
   })
   return null
 }

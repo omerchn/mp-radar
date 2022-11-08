@@ -21,7 +21,7 @@ interface Props {
 export default function UserMarker({ setView, isDisabled }: Props) {
   const map = useMap()
   const hasFlownToUser = useRef(false)
-  const { userLocation } = useLocateUser({
+  const { userLocation, isLocating } = useLocateUser({
     watch: true,
     setView,
   })
@@ -46,7 +46,7 @@ export default function UserMarker({ setView, isDisabled }: Props) {
       title="אני"
       interactive={false}
       zIndexOffset={-1}
-      opacity={isDisabled ? 0.5 : 1}
+      opacity={isDisabled || isLocating ? 0.5 : 1}
     />
   ) : null
 }

@@ -14,14 +14,12 @@ import MyLocationIcon from '@mui/icons-material/MyLocationRounded'
 interface Props {
   onStartAdd: () => void
   hideSpeedDial: boolean
-  followUser: boolean
   setFollowUser: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export default function Overlay({
   onStartAdd,
   hideSpeedDial,
-  followUser,
   setFollowUser,
 }: Props) {
   return (
@@ -76,7 +74,7 @@ export default function Overlay({
           }}
           onClick={() => setFollowUser(true)}
         >
-          <MyLocationIcon color={followUser ? 'primary' : 'disabled'} />
+          <MyLocationIcon color={true ? 'primary' : 'disabled'} />
         </Fab>
       </Box>
     </div>
