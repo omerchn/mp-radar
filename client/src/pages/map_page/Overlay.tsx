@@ -71,10 +71,14 @@ export default function Overlay({
             position: 'absolute',
             bottom: '1em',
             left: '1em',
+            backgroundColor: '#eee',
+            ':focus': {
+              backgroundColor: '#eee',
+            },
           }}
           onClick={() => setFollowUser(true)}
         >
-          <MyLocationIcon color={true ? 'primary' : 'disabled'} />
+          <MyLocationIcon color="primary" />
         </Fab>
       </Box>
     </div>

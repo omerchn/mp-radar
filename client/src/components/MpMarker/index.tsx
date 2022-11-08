@@ -70,7 +70,7 @@ export default function MpMarker({ mpData, isDisabled }: Props) {
 
   useEffect(() => {
     let tId
-    if (isScoreLoading) tId = toast.loading('טוען...', { duration: Infinity })
+    if (isScoreLoading) tId = toast.loading('טוען', { duration: Infinity })
     else toast.dismiss(tId)
   }, [isScoreLoading])
 
