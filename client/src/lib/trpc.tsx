@@ -13,7 +13,9 @@ export type MpData = NonNullable<
 
 // trpc websocket client
 const wsClient = createWSClient({
-  url: import.meta.env.DEV ? 'ws://localhost:3000' : import.meta.env.API_WS_URL,
+  url: import.meta.env.DEV
+    ? 'ws://localhost:3000'
+    : import.meta.env.VITE_API_WS_URL,
 })
 
 // trpc initialization
@@ -39,7 +41,7 @@ export function TrpcProvider({ children }: { children: React.ReactNode }) {
   )
 }
 
-// hooks 
+// hooks
 export function useMps() {
   const utils = trpc.useContext()
   const [enabled, setEnabled] = useState(true)
