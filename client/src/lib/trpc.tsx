@@ -13,9 +13,7 @@ export type MpData = NonNullable<
 
 // trpc websocket client
 const wsClient = createWSClient({
-  url: import.meta.env.DEV
-    ? 'ws://localhost:3000'
-    : 'wss://mp-radar-server-dde46qfcca-zf.a.run.app',
+  url: import.meta.env.DEV ? 'ws://localhost:3000' : import.meta.env.API_WS_URL,
 })
 
 // trpc initialization
