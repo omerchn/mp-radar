@@ -9,7 +9,7 @@ on:
     paths: [client/**]
 
 env:
-  PROJECT_ID: mp-radar-365513
+  PROJECT_ID: mp-radar-406019
   GAR_LOCATION: me-west1
   REPOSITORY: mp-radar-server
   SERVICE: mp-radar-server

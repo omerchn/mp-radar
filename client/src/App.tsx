@@ -10,7 +10,7 @@ import MapPage from './pages/map_page'
 // styles
 import './App.scss'
 
-function App() {
+export default function App() {
   return (
     <div className="App">
       <TrpcProvider>
@@ -32,5 +32,3 @@ function App() {
     </div>
   )
 }
-
-export default App
